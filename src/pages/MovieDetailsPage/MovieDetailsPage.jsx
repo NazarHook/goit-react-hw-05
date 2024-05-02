@@ -1,5 +1,5 @@
 import { useParams, NavLink, Link, Outlet, useLocation } from 'react-router-dom';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, Suspense } from 'react';
 import { getMovieById } from '../../components/movies-api';
 import MovieCard from '../../components/MovieCard/MovieCard';
 import MovieCast from '../../components/MovieCast/MovieCast';
@@ -44,7 +44,9 @@ export default function MovieDetailsPage() {
                <NavLink to={'reviews'}>Reviews</NavLink>
             </li>
          </ul>
-         <Outlet></Outlet>
+         <Suspense fallback={<Loader></Loader>}>
+        <Outlet />
+      </Suspense>
       </div>
    );
 }

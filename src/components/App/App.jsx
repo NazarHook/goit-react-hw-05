@@ -2,13 +2,14 @@ import reactLogo from '../../assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.module.css'
 import Layout from '../Layout/Layout'
-import HomePage from '../../pages/HomePage/HomePage'
-import MoviesPage from '../../pages/MoviesPage/MoviesPage'
-import MovieReviews from '../MovieReviews/MovieReviews'
-import MovieCast from '../MovieCast/MovieCast'
-import MovieDetailsPage from '../../pages/MovieDetailsPage/MovieDetailsPage'
-import NotFoundPage from '../../pages/NotFoundPage/NotFoundPage'
 import { Routes, Route } from "react-router-dom";
+import { lazy } from "react";
+const HomePage = lazy(() => import('../../pages/HomePage/HomePage'))
+const MoviesPage = lazy(() => import('../../pages/MoviesPage/MoviesPage'))
+const MovieReviews = lazy(() => import('../MovieReviews/MovieReviews'))
+const MovieCast = lazy(() => import('../MovieCast/MovieCast'))
+const MovieDetailsPage = lazy(() => import('../../pages/MovieDetailsPage/MovieDetailsPage'))
+const NotFoundPage = lazy(() => import('../../pages/NotFoundPage/NotFoundPage'))
 function App() {
   return (
    <Layout>
