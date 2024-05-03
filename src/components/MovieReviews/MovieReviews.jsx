@@ -14,7 +14,7 @@ export default function MovieReviews() {
         }
      }
      getReviews()
-   }, [])
+   }, [movieId])
    console.log(reviews);
     return (
         <div>

@@ -20,7 +20,7 @@ export default function MovieCast({}) {
         }
      }
      getStaff()
-   }, [])
+   }, [movieId])
     return (
         <div>
             {loader && <Loader></Loader>}
