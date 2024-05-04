@@ -12,30 +12,39 @@ export default function MoviesPage() {
 
     useEffect(() => {
         async function fetchMovies() {
-            if (query.trim() !== '') {
+            try {
                 setLoader(true)
-                try {
-                    const data = await getMovieByName(query)
-                    setMovies(data)
-                } catch (error) {
-                    console.error("Error fetching movies:", error)
-                } finally {
-                    setLoader(false)
-                }
+                const data = await getMovieByName(query)
+                setMovies(data)
+            } catch (error) {
+                console.error("Error fetching movies:", error)
+            } finally {
+                setLoader(false)
             }
         }
-        const queryParam = searchParams.get('query')
-        if (queryParam) {
-            setQuery(queryParam)
-        } else {
-            fetchMovies() 
+
+        if (searchParams.has('query')) {
+            const queryParams = searchParams.get('query')
+            setQuery(queryParams)
+            fetchMovies()
         }
-    }, [query, searchParams])
+    }, [searchParams])
 
     const handleSubmit = async (event) => {
+        if (query === '') {
+            return
+        }
         event.preventDefault()   
         setSearchParams({ query: query })
-        setQuery('')
+        try {
+            setLoader(true)
+            const data = await getMovieByName(query)
+            setMovies(data)
+        } catch (error) {
+            console.error("Error fetching movies:", error)
+        } finally {
+            setLoader(false)
+        }
     }
 
     return (
