@@ -11,7 +11,7 @@ export default function MoviesPage() {
     const [searchParams, setSearchParams] = useSearchParams()
 
     useEffect(() => {
-        async function fetchMovies () {
+        async function fetchMovies() {
             if (query.trim() !== '') {
                 setLoader(true)
                 try {
@@ -19,15 +19,18 @@ export default function MoviesPage() {
                     setMovies(data)
                 } catch (error) {
                     console.error("Error fetching movies:", error)
-                }
-                finally{
+                } finally {
                     setLoader(false)
                 }
             }
         }
-        
-        fetchMovies()
-    }, [query, searchParams]) 
+        const queryParam = searchParams.get('query')
+        if (queryParam) {
+            setQuery(queryParam)
+        } else {
+            fetchMovies() 
+        }
+    }, [query, searchParams])
 
     const handleSubmit = async (event) => {
         event.preventDefault()   
