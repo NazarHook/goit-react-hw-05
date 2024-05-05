@@ -1,51 +1,44 @@
-import React, { useEffect, useState } from "react"
-import { useSearchParams } from "react-router-dom" 
-import { getMovieByName } from "../../components/movies-api"
-import Loader from "../../components/Loader/Loader"
-import MovieList from "../../components/MovieList/MovieList"
+import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { getMovieByName } from "../../components/movies-api";
+import Loader from "../../components/Loader/Loader";
+import MovieList from "../../components/MovieList/MovieList";
+import ErrorMessage from "../../components/ErrorMessage/ErrorMessage";
 
 export default function MoviesPage() {
-    const [movies, setMovies] = useState([])
-    const [query, setQuery] = useState('')
-    const [loader, setLoader] = useState(false)
-    const [searchParams, setSearchParams] = useSearchParams()
+    const [movies, setMovies] = useState([]);
+    const [query, setQuery] = useState('');
+    const [loader, setLoader] = useState(false);
+    const [searchParams, setSearchParams] = useSearchParams();
 
     useEffect(() => {
         async function fetchMovies() {
             try {
-                setLoader(true)
-                const data = await getMovieByName(query)
-                setMovies(data)
+                setLoader(true);
+                const data = await getMovieByName(query);
+                if (data.length > 0) {
+                    setMovies(data);
+                } else {
+                    <ErrorMessage></ErrorMessage>
+                }
             } catch (error) {
-                console.error("Error fetching movies:", error)
+                console.error("Error fetching movies:", error);
             } finally {
-                setLoader(false)
+                setLoader(false);
             }
         }
-
-        if (searchParams.has('query')) {
-            const queryParams = searchParams.get('query')
-            setQuery(queryParams)
+        if (query !== '') {
+            fetchMovies();
         }
-        fetchMovies()
-    }, [searchParams])
+    }, [query]); 
 
     const handleSubmit = async (event) => {
+        event.preventDefault();
         if (query === '') {
-            return
+            return;
         }
-        event.preventDefault()   
-        setSearchParams({ query: query })
-        try {
-            setLoader(true)
-            const data = await getMovieByName(query)
-            setMovies(data)
-        } catch (error) {
-            console.error("Error fetching movies:", error)
-        } finally {
-            setLoader(false)
-        }
-    }
+        setSearchParams({ query: query });
+    };
 
     return (
         <div>
@@ -60,5 +53,5 @@ export default function MoviesPage() {
             {loader && <Loader />}
             <MovieList movies={movies} />
         </div>
-    )
+    );
 }
