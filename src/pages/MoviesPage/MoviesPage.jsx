@@ -26,8 +26,8 @@ export default function MoviesPage() {
         if (searchParams.has('query')) {
             const queryParams = searchParams.get('query')
             setQuery(queryParams)
-            fetchMovies()
         }
+        fetchMovies()
     }, [searchParams])
 
     const handleSubmit = async (event) => {
