@@ -7,30 +7,17 @@ import ErrorMessage from "../../components/ErrorMessage/ErrorMessage";
 
 export default function MoviesPage() {
     const [movies, setMovies] = useState([]);
-    const [query, setQuery] = useState('');
     const [loader, setLoader] = useState(false);
+    const [query, setQuery] = useState('');
     const [searchParams, setSearchParams] = useSearchParams();
 
     useEffect(() => {
-        async function fetchMovies() {
-            try {
-                setLoader(true);
-                const data = await getMovieByName(query);
-                if (data.length > 0) {
-                    setMovies(data);
-                } else {
-                    <ErrorMessage></ErrorMessage>
-                }
-            } catch (error) {
-                console.error("Error fetching movies:", error);
-            } finally {
-                setLoader(false);
-            }
+        const params = searchParams.get('query');
+        if (params !== query) {
+            setQuery(params || '');
         }
-        if (query !== '') {
-            fetchMovies();
-        }
-    }, [query]); 
+    }, [searchParams]); 
+
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -38,6 +25,20 @@ export default function MoviesPage() {
             return;
         }
         setSearchParams({ query: query });
+        try {
+            setLoader(true);
+            const data = await getMovieByName(query);
+            if (data.length > 0) {
+                setMovies(data);
+            } else {
+                setMovies([]);
+                <ErrorMessage></ErrorMessage>
+            }
+        } catch (error) {
+            console.error("Error fetching movies:", error);
+        } finally {
+            setLoader(false);
+        }
     };
 
     return (
