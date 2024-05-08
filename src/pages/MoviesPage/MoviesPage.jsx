@@ -18,6 +18,27 @@ export default function MoviesPage() {
         }
     }, [searchParams]); 
 
+    useEffect(() => {
+        const fetchMovies = async () => {
+            if (query === '') return;
+            
+            try {
+                setLoader(true);
+                const data = await getMovieByName(query);
+                if (data.length > 0) {
+                    setMovies(data);
+                } else {
+                    setMovies([]);
+                }
+            } catch (error) {
+                console.error("Error fetching movies:", error);
+            } finally {
+                setLoader(false);
+            }
+        };
+
+        fetchMovies();
+    }, [query]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -25,20 +46,6 @@ export default function MoviesPage() {
             return;
         }
         setSearchParams({ query: query });
-        try {
-            setLoader(true);
-            const data = await getMovieByName(query);
-            if (data.length > 0) {
-                setMovies(data);
-            } else {
-                setMovies([]);
-                <ErrorMessage></ErrorMessage>
-            }
-        } catch (error) {
-            console.error("Error fetching movies:", error);
-        } finally {
-            setLoader(false);
-        }
     };
 
     return (
@@ -52,7 +59,7 @@ export default function MoviesPage() {
                 <button type="submit">Search</button>
             </form>
             {loader && <Loader />}
-            <MovieList movies={movies} />
+            {movies.length > 0 ? <MovieList movies={movies} /> : <ErrorMessage />}
         </div>
     );
 }
